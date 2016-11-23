@@ -15,7 +15,10 @@ const resolve = {
         } else {
             return db.queryAsync('SELECT * FROM customers ORDER BY customerNumber ASC').then(rows => formatter(rows));
         }
-    }
+    },
+    customer: ({
+        id
+    }) => db.queryAsync('SELECT * FROM customers WHERE customerNumber = ?', id).then(rows => formatter(rows)).then(rows => rows[0])
 }
 
 function formatter(rows) {
@@ -24,9 +27,7 @@ function formatter(rows) {
         name: e.customerName || '',
         contact: [(e.contactFirstName || ''), (e.contactLastName || '')].join(' '),
         phone: e.phone,
-        address: [(e.country || ''), (e.state || ''), (e.city || ''), (e.addressLine1 || ''), (e.addressLine2 || '')].filter(e => {
-            if (e) return e;
-        }).join(', ')
+        address: [(e.country || ''), (e.state || ''), (e.city || ''), (e.addressLine1 || ''), (e.addressLine2 || '')].filter(e => e).join(', ')
     }))
 }
 

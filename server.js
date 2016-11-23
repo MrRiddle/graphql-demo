@@ -7,7 +7,8 @@ import config from './config'
 /**
  * Services
  */
-import getAllCustomers from './service/customers'
+import customers from './service/customers'
+import employees from './service/employees'
 
 let app = express();
 let {
@@ -25,7 +26,8 @@ var connection = mysql.createConnection(mysqlConfig);
 connection.connect();
 global.db = Bluebird.promisifyAll(connection);
 
-app.post(...getAllCustomers);
+app.post(...customers);
+app.post(...employees);
 
 app.listen(port, () => {
     console.log('GraphQL listening at http://localhost:%s', port);

@@ -4,7 +4,8 @@ import {
 
 export default buildSchema(`
     type Query {
-        customers(from: Int, to: Int): [Customer]
+        customers(officeCode: Int): [Customer]
+        customer(id: Int!): Customer
     }
 
     type Customer {
