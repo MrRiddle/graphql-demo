@@ -30,21 +30,13 @@ function formatter(rows) {
     }))
 }
 
-
-let ql = `
-    query {
-        customers(from:0, to:5) {
-            id
-            name
-            address
-        }
-    }
-`;
-
 const service = [
     '/customers',
     (req, res) => {
-        graphql(schema, ql, resolve)
+        let {
+            query
+        } = req.body;
+        graphql(schema, query, resolve)
             .then((result) => {
                 res.send(result);
             })

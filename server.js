@@ -15,6 +15,8 @@ let {
     mysqlConfig
 } = config;
 
+app.use(express.static('public'));
+app.use(bodyParser());
 app.use(bodyParser.text({
     type: 'application/graphql'
 }));
@@ -23,7 +25,7 @@ var connection = mysql.createConnection(mysqlConfig);
 connection.connect();
 global.db = Bluebird.promisifyAll(connection);
 
-app.get(...getAllCustomers);
+app.post(...getAllCustomers);
 
 app.listen(port, () => {
     console.log('GraphQL listening at http://localhost:%s', port);

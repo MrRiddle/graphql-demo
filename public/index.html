@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Graphql Demo</title>
+    <style type="text/css">
+        textarea {
+            width: 320px;
+            height: 480px;
+            font-size: 14px;
+            font-family: Consolas, Georgia, Serif;
+        }
+    </style>
+</head>
+<body>
+    <form target="_blank" id="form" method="post">
+        <textarea name="query"></textarea>
+    </form>
+    <select id="path">
+        <option value ="/customers">customers</option>
+    </select>
+    <button onclick="handleQuery()">查询</button>
+    <script type="text/javascript">
+        function handleQuery(){
+            var form = document.getElementById('form');
+            var path = document.getElementById('path').value;
+            form.setAttribute('action', path);
+            form.submit();
+        }
+    </script>
+</body>
+</html>
