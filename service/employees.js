@@ -22,14 +22,21 @@ const resolve = {
 
 const getManager = id => {
     if (id)
-        return db.queryAsync('SELECT * FROM employees WHERE employeeNumber = ?', id).then(rows => formatter(rows)).then(rows => rows[0]);
+        return db.queryAsync('SELECT * FROM employees LEFT OUTER JOIN offices ON employees.officeCode = offices.officeCode WHERE employeeNumber = ?', id).then(rows => formatterBasic(rows)).then(rows => rows[0]);
     else
         return null;
 }
 
+const getColleagues = id => {
+    if (id)
+        return db.queryAsync('SELECT * FROM employees LEFT OUTER JOIN offices ON employees.officeCode = offices.officeCode WHERE reportsTo = ?', id).then(rows => formatterBasic(rows));
+    else
+        return [];
+}
+
 const getSubordinates = id => {
     if (id)
-        return db.queryAsync('SELECT * FROM employees WHERE reportsTo = ?', id).then(rows => formatter(rows));
+        return db.queryAsync('SELECT * FROM employees LEFT OUTER JOIN offices ON employees.officeCode = offices.officeCode WHERE reportsTo = ? ORDER BY employeeNumber ASC', id).then(rows => formatterBasic(rows));
     else
         return [];
 }
@@ -44,7 +51,20 @@ function formatter(rows) {
         job: e.jobTitle || '',
         address: [(e.country || ''), (e.state || ''), (e.city || ''), (e.addressLine1 || ''), (e.addressLine2 || '')].filter(e => e).join(', '),
         manager: getManager(e.reportsTo),
+        colleagues: getColleagues(e.reportsTo),
         subordinates: getSubordinates(e.employeeNumber)
+    }))
+}
+
+function formatterBasic(rows) {
+    return rows.map(e => ({
+        id: e.employeeNumber || 0,
+        name: [(e.firstName || ''), (e.lastName || '')].join(' '),
+        extension: e.extension || '',
+        email: e.email || '',
+        officeCode: e.officeCode || '',
+        job: e.jobTitle || '',
+        address: [(e.country || ''), (e.state || ''), (e.city || ''), (e.addressLine1 || ''), (e.addressLine2 || '')].filter(e => e).join(', ')
     }))
 }
 
