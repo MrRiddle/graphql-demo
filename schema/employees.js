@@ -4,7 +4,7 @@ import {
 
 export default buildSchema(`
     type Query {
-        employees: [EmployeeWithColleague]
+        employees(officeCode: Int): [EmployeeWithColleague]
         employee(id: Int!): EmployeeWithColleague
     }
 
@@ -34,11 +34,6 @@ export default buildSchema(`
     interface Employee {
         id: ID!
         name: String!
-        extension: String!
-        email: String!
-        officeCode: Int!
-        job: String!
-        address: String!
     }
 
 `);
